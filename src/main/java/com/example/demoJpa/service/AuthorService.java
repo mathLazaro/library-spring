@@ -1,17 +1,20 @@
 package com.example.demoJpa.service;
 
 import com.example.demoJpa.domain.Author;
-import com.example.demoJpa.dto.AuthorDTO;
+import com.example.demoJpa.controller.dto.AuthorDTO;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.validator.AuthorValidator;
 import com.example.demoJpa.validator.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,18 +48,19 @@ public class AuthorService {
      */
     public List<AuthorDTO> searchAuthorsByNameOrNationality(String name, String nationality) throws ResponseStatusException {
 
-        List<Author> response;
+        // TODO - corrigir retorno inesperado
+        System.out.println(name);
+        System.out.println(nationality);
+        Author authorToSearch = Author.builder().name(name).nationality(nationality).build();
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnorePaths("last_modified_date", "created_date")
+//                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Author> example = Example.of(authorToSearch, matcher);
 
-        if (name == null && nationality == null)
-            response = authorRepository.findAll();
-        else if (name != null)
-            response = authorRepository.findAuthorsByNameContaining(name);
-        else if (nationality != null)
-            response = authorRepository.findAuthorsByNationalityContaining(name);
-        else
-            response = authorRepository.findAuthorsByNameContainingAndNationalityContaining(name, nationality);
-
-        return response.stream().map(AuthorDTO::toAuthorDTO).toList();
+        return authorRepository.findAll(example).stream().map(AuthorDTO::toAuthorDTO).collect(Collectors.toList());
     }
 
     // restrict methods - need user validation

@@ -1,6 +1,6 @@
 package com.example.demoJpa.controller;
 
-import com.example.demoJpa.dto.AuthorDTO;
+import com.example.demoJpa.controller.dto.AuthorDTO;
 import com.example.demoJpa.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
 
 import java.net.URI;
 import java.util.List;
