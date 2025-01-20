@@ -2,11 +2,11 @@ package com.example.demoJpa.controller;
 
 import com.example.demoJpa.controller.dto.AuthorDTO;
 import com.example.demoJpa.service.AuthorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -21,71 +21,48 @@ public class AuthorController {
 
     @GetMapping("{id}")
     public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable("id") Integer id) {
-
-        try {
-            return new ResponseEntity<>(service.getAuthorById(id), HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(null, e.getStatusCode());
-        }
+        return new ResponseEntity<>(service.getAuthorById(id), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<AuthorDTO>> getAllAuthorsByNameOrNationality(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality) {
-
-        try {
-            return new ResponseEntity<>(service.searchAuthorsByNameOrNationality(name, nationality), HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(null, e.getStatusCode());
-        }
+        return new ResponseEntity<>(service.searchAuthorsByNameOrNationality(name, nationality), HttpStatus.OK);
     }
 
     @PostMapping("{userId}")
-    public ResponseEntity<Object> postAuthor(
-            @RequestBody AuthorDTO author,
+    public ResponseEntity<Void> postAuthor(
+            @Valid @RequestBody AuthorDTO author,
             @PathVariable("userId") Integer user) {
 
-        try {
-            Integer id = service.persistAuthor(author, user);
+        Integer id = service.persistAuthor(author, user);
 
-            URI uri = ServletUriComponentsBuilder
-                    .fromCurrentRequestUri()
-                    .path("/{id}")
-                    .buildAndExpand(id).toUri();
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(id).toUri();
 
-
-            return ResponseEntity.created(uri).build();
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
-        }
+        return ResponseEntity.created(uri).build();
     }
 
 
     @PutMapping("{authorId}/user/{userId}")
-    public ResponseEntity<String> putAuthor(
-            @RequestBody AuthorDTO author,
+    public ResponseEntity<Void> putAuthor(
+            @Valid @RequestBody AuthorDTO author,
             @PathVariable("authorId") Integer authorId,
             @PathVariable("userId") Integer userId) {
 
-        try {
-            service.updateAuthor(author, authorId, userId);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
-        }
+        service.updateAuthor(author, authorId, userId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("{authorId}/user/{userId}")
-    public ResponseEntity<String> deleteAuthor(
+    public ResponseEntity<Void> deleteAuthor(
             @PathVariable("authorId") Integer authorId,
             @PathVariable("userId") Integer userId) {
 
-        try {
-            service.deleteAuthorById(authorId, userId);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
-        }
+        service.deleteAuthorById(authorId, userId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

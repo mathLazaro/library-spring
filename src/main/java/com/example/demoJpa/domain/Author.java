@@ -1,12 +1,15 @@
 package com.example.demoJpa.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
@@ -17,7 +20,8 @@ import java.util.List;
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uniqueAuthor", columnNames = {"name", "birthDate", "nationality"})})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author extends AbstractAuditingEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +32,15 @@ public class Author extends AbstractAuditingEntity {
     private LocalDate birthDate;
     @Column(nullable = false)
     private String nationality;
+
+    // auditing fields
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate = LocalDateTime.now();
+    @LastModifiedBy
+    private Integer lastModifiedBy;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.PERSIST)

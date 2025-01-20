@@ -1,7 +1,7 @@
 package com.example.demoJpa.service;
 
-import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.controller.dto.AuthorDTO;
+import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.validator.AuthorValidator;
 import com.example.demoJpa.validator.UserValidator;
@@ -33,9 +33,7 @@ public class AuthorService {
 
         Author response = authorRepository.findById(id).orElse(null);
 
-        authorValidator.runValidation(
-                response,
-                List.of(authorValidator::verifyNotFound));
+        authorValidator.verifyNotFound(response);
 
         return AuthorDTO.toAuthorDTO(response);
     }
@@ -48,15 +46,12 @@ public class AuthorService {
      */
     public List<AuthorDTO> searchAuthorsByNameOrNationality(String name, String nationality) throws ResponseStatusException {
 
-        // TODO - corrigir retorno inesperado
-        System.out.println(name);
-        System.out.println(nationality);
         Author authorToSearch = Author.builder().name(name).nationality(nationality).build();
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("last_modified_date", "created_date")
-//                .withIgnoreCase()
+                .withIgnorePaths("last_modified_date", "created_date","last_modified_by", "id")
+                .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Author> example = Example.of(authorToSearch, matcher);
 
@@ -76,14 +71,11 @@ public class AuthorService {
      */
     public Integer persistAuthor(AuthorDTO authorDTO, Integer userId) throws ResponseStatusException {
 
+        Author author = authorDTO.toAuthor();
         userValidator.verifyAdmin(userId);
+        authorValidator.verifyDuplicatedAuthor(author);
 
-        authorValidator.runValidation(
-                authorDTO.toAuthor(),
-                List.of(authorValidator::verifyFields,
-                        authorValidator::verifyDuplicatedAuthor));
-
-        return authorRepository.save(authorDTO.toAuthor()).getId();
+        return authorRepository.save(author).getId();
     }
 
     /**
@@ -100,11 +92,8 @@ public class AuthorService {
         userValidator.verifyAdmin(userId);
 
         Author authorToUpdate = authorRepository.findById(authorId).orElse(null);
-        authorValidator.runValidation(
-                authorToUpdate,
-                List.of(authorValidator::verifyNotFound,
-                        authorValidator::verifyFields,
-                        authorValidator::verifyDuplicatedAuthor));
+        authorValidator.verifyNotFound(authorToUpdate);
+        authorValidator.verifyDuplicatedAuthor(authorToUpdate);
 
         // updating Author object
         authorToUpdate.setName(authorDTO.name());
@@ -124,10 +113,8 @@ public class AuthorService {
 
         Author response = authorRepository.findById(id).orElse(null);
 
-        authorValidator.runValidation(
-                response,
-                List.of(authorValidator::verifyNotFound,
-                        authorValidator::verifyReferencedAuthor));
+        authorValidator.verifyNotFound(response);
+        authorValidator.verifyReferencedAuthor(response);
 
         authorRepository.deleteById(id);
     }

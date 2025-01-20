@@ -9,11 +9,11 @@ import java.time.LocalDate;
 
 @Builder
 public record AuthorDTO(Integer id,
-                        @NotBlank(message = "mensagem obrigatória")
+                        @NotBlank(message = "nome obrigatório")
                         String name,
-                        @NotNull(message = "mensagem obrigatória")
+                        @NotNull(message = "data de nascimento obrigatório")
                         LocalDate birthDate,
-                        @NotBlank(message = "mensagem obrigatória")
+                        @NotBlank(message = "nacionalidade obrigatória")
                         String nationality) {
 
 public Author toAuthor() {

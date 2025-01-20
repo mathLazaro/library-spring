@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 @Builder
-public class DefaultRequestException extends RuntimeException {
+public class DefaultRequestExceptionDTO {
     private final Integer status;
     private final String message;
-    private final List<RuntimeException> errors;
+    private final List<ErrorDetailDTO> errors;
 }

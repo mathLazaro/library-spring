@@ -17,6 +17,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class UserValidator {
+    // TODO - Adaptar aos DTO de exception
 
     private final UserRepository repository;
 
