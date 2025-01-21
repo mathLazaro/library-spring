@@ -1,6 +1,6 @@
 package com.example.demoJpa.controller.mapper;
 
-import com.example.demoJpa.controller.dto.AuthorDTO;
+import com.example.demoJpa.controller.dto.author.AuthorDTO;
 import com.example.demoJpa.domain.Author;
 import org.mapstruct.Mapper;
 

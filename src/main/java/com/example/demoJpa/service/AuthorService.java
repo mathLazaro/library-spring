@@ -1,6 +1,6 @@
 package com.example.demoJpa.service;
 
-import com.example.demoJpa.controller.dto.AuthorDTO;
+import com.example.demoJpa.controller.dto.author.AuthorDTO;
 import com.example.demoJpa.controller.mapper.AuthorMapper;
 import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.repository.AuthorRepository;
@@ -31,9 +31,10 @@ public class AuthorService {
      * @return returns Author found on database or null when not found
      * @throws ResponseStatusException throws ResponseStatusException(Not Found) when the id was not found on database
      */
-    public AuthorDTO getAuthorById(Integer id) throws ResponseStatusException {
+    public AuthorDTO getAuthorById(Integer id) {
 
         Author response = authorRepository.findById(id).orElse(null);
+
 
         authorValidator.verifyNotFound(response);
 
@@ -47,7 +48,7 @@ public class AuthorService {
      * @return list of authors
      * @throws ResponseStatusException throws ResponseStatusException(Bad Request) if both params are empty
      */
-    public List<AuthorDTO> searchAuthorsByNameOrNationality(String name, String nationality) throws ResponseStatusException {
+    public List<AuthorDTO> searchAuthorsByNameOrNationality(String name, String nationality) {
 
         Author authorToSearch = Author.builder().name(name).nationality(nationality).build();
         ExampleMatcher matcher = ExampleMatcher
@@ -72,7 +73,7 @@ public class AuthorService {
      *                                 throws ResponseStatusException(Unauthorized) when user is not admin
      *                                 throws ResponseStatusException(Not Found) when user was not found on database
      */
-    public Integer persistAuthor(AuthorDTO authorDTO, Integer userId) throws ResponseStatusException {
+    public Integer persistAuthor(AuthorDTO authorDTO, Integer userId) {
 
         Author author = authorMapper.toAuthor(authorDTO);
         userValidator.verifyAdmin(userId);
@@ -90,7 +91,7 @@ public class AuthorService {
      */
     @Transactional
 
-    public void updateAuthor(AuthorDTO authorDTO, Integer authorId, Integer userId) throws ResponseStatusException {
+    public void updateAuthor(AuthorDTO authorDTO, Integer authorId, Integer userId) {
 
         userValidator.verifyAdmin(userId);
 
@@ -110,7 +111,7 @@ public class AuthorService {
      *                                 throws ResponseStatusException(Not Found) when the author was not found on database
      */
     @Transactional
-    public void deleteAuthorById(@NonNull Integer id, Integer userId) throws ResponseStatusException {
+    public void deleteAuthorById(@NonNull Integer id, Integer userId) {
 
         userValidator.verifyAdmin(userId);
 

@@ -1,4 +1,4 @@
-package com.example.demoJpa.controller;
+package com.example.demoJpa.controller.endpoint;
 
 import com.example.demoJpa.domain.UserApplication;
 import com.example.demoJpa.repository.UserRepository;

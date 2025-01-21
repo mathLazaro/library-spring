@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AuthorValidator {
+public class AuthorValidator extends EntityValidator<Author> {
 
     private final AuthorRepository repository;
 
@@ -35,10 +35,4 @@ public class AuthorValidator {
             throw new DataIntegrityViolationException("O autor ainda possui livros e não pode ser deletado");
     }
 
-    public void verifyNotFound(Author author) {
-
-        if (author == null)
-            throw new EntityNotFoundException("Id não encontrado no banco de dados");
-
-    }
 }
