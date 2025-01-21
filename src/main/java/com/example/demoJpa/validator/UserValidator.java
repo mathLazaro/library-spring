@@ -1,23 +1,16 @@
 package com.example.demoJpa.validator;
 
-import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.domain.RoleUser;
 import com.example.demoJpa.domain.UserApplication;
-import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class UserValidator {
-    // TODO - Adaptar aos DTO de exception
 
     private final UserRepository repository;
 
@@ -32,13 +25,13 @@ public class UserValidator {
     private void verifyRole(UserApplication user) {
 
         if (user.getRoleUser() != RoleUser.ADMIN)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Esta operação só pode ser realizada por usuário administrador");
+            throw new PermissionDeniedDataAccessException("Esta operação só pode ser realizada por usuário administrador", new Exception());
     }
 
     private void verifyNotFound(UserApplication user) {
 
         if (user == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id de usuário não encontrado no banco de dados");
+            throw new EntityNotFoundException("Id não encontrado no banco de dados");
 
     }
 }

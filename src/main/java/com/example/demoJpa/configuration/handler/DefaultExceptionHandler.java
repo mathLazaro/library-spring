@@ -1,11 +1,11 @@
 package com.example.demoJpa.configuration.handler;
 
-
 import com.example.demoJpa.controller.dto.exception.DefaultRequestExceptionDTO;
 import com.example.demoJpa.controller.dto.exception.ErrorDetailDTO;
 import com.example.demoJpa.controller.dto.exception.InvalidFieldExceptionDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,6 +47,9 @@ public class DefaultExceptionHandler {
 
     }
 
-    //TODO - Adicionar as exceções do usuário
+    @ExceptionHandler(PermissionDeniedDataAccessException.class)
+    public ResponseEntity<DefaultRequestExceptionDTO> handleUnauthorizedRole(PermissionDeniedDataAccessException e) {
+        return wrapException(e.getMessage(), List.of(), HttpStatus.UNAUTHORIZED);
+    }
 
 }
