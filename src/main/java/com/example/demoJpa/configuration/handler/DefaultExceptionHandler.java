@@ -32,7 +32,7 @@ public class DefaultExceptionHandler {
     public ResponseEntity<DefaultRequestExceptionDTO> handleFieldConstraintViolation(MethodArgumentNotValidException e) {
         List<ErrorDetailDTO> errors = e.getFieldErrors().stream().map(InvalidFieldExceptionDTO::toInvalidFieldExceptionDTO).toList();
 
-        return wrapException("Todos os valores devem ser não nulos", errors, HttpStatus.UNPROCESSABLE_ENTITY);
+        return wrapException("Violação de inserção de campo", errors, HttpStatus.UNPROCESSABLE_ENTITY);
 
     }
 
