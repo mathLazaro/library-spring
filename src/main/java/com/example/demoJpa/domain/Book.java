@@ -11,6 +11,8 @@ import lombok.ToString;
 @ToString
 public class Book {
 
+    // TODO - criar camada de Service e Controller do Livro
+    // TODO - adaptar campos ao requisito
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -1,6 +1,7 @@
 package com.example.demoJpa.service;
 
 import com.example.demoJpa.controller.dto.AuthorDTO;
+import com.example.demoJpa.controller.mapper.AuthorMapper;
 import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.validator.AuthorValidator;
@@ -23,6 +24,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final UserValidator userValidator;
+    private final AuthorMapper authorMapper;
 
     /**
      * @param id id must be passed
@@ -35,7 +37,8 @@ public class AuthorService {
 
         authorValidator.verifyNotFound(response);
 
-        return AuthorDTO.toAuthorDTO(response);
+        return authorMapper.toAuthorDTO(response);
+//        return AuthorDTO.toAuthorDTO(response);
     }
 
     /**
@@ -50,12 +53,12 @@ public class AuthorService {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("last_modified_date", "created_date","last_modified_by", "id")
+                .withIgnorePaths("last_modified_date", "created_date", "last_modified_by", "id")
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Author> example = Example.of(authorToSearch, matcher);
 
-        return authorRepository.findAll(example).stream().map(AuthorDTO::toAuthorDTO).collect(Collectors.toList());
+        return authorRepository.findAll(example).stream().map(authorMapper::toAuthorDTO).collect(Collectors.toList());
     }
 
     // restrict methods - need user validation
@@ -71,7 +74,7 @@ public class AuthorService {
      */
     public Integer persistAuthor(AuthorDTO authorDTO, Integer userId) throws ResponseStatusException {
 
-        Author author = authorDTO.toAuthor();
+        Author author = authorMapper.toAuthor(authorDTO);
         userValidator.verifyAdmin(userId);
         authorValidator.verifyDuplicatedAuthor(author);
 
