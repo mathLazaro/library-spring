@@ -1,5 +1,6 @@
 package com.example.demoJpa.controller.endpoint;
 
+import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.controller.dto.book.BookInputDTO;
 import com.example.demoJpa.controller.dto.book.BookOutputDTO;
 import com.example.demoJpa.service.BookService;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("books")
 @RequiredArgsConstructor
-public class BookController {
+public class BookController implements GenericController {
 
     private final BookService bookService;
 
@@ -51,12 +52,7 @@ public class BookController {
 
         Integer id = bookService.persistBook(book);
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .path("/{id}")
-                .buildAndExpand(id).toUri();
-
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(generateUri(id)).build();
     }
 
     @PutMapping("{bookId}")

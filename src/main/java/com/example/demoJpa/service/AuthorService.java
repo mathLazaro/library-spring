@@ -96,6 +96,7 @@ public class AuthorService {
         Author authorToUpdate = authorRepository.findById(authorId).orElse(null);
         authorValidator.verifyNotFound(authorToUpdate);
         authorValidator.verifyDuplicatedAuthor(authorToUpdate);
+        
 
         // updating Author object
         authorToUpdate.setName(authorDTO.name());

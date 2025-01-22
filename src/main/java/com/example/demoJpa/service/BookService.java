@@ -32,7 +32,8 @@ public class BookService {
         return bookMapper.toBookOutputDTO(book);
     }
 
-    public List<BookOutputDTO> searchBook(BookInputDTO book, Integer size, Integer page) {
+    public Page<BookOutputDTO> searchBook(BookInputDTO book, Integer size, Integer page) {
+        // TODO - buscar por ano e nome do autor
         PageRequest pageRequest = PageRequest.of(page, size);
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
@@ -42,13 +43,7 @@ public class BookService {
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Book> example = Example.of(bookMapper.toBook(book), matcher);
 
-        Page<Book> all = bookRepository.findAll(example, pageRequest);
-        System.out.println(all);
-        List<BookOutputDTO> formmated = all.stream().map(bookMapper::toBookOutputDTO).toList();
-        System.out.println(formmated);
-
-
-        return formmated;
+        return bookRepository.findAll(example, pageRequest).map(bookMapper::toBookOutputDTO);
     }
 
     public Integer persistBook(BookInputDTO bookInput) {

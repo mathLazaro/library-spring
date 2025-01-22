@@ -1,5 +1,6 @@
 package com.example.demoJpa.controller.endpoint;
 
+import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.controller.dto.author.AuthorDTO;
 import com.example.demoJpa.service.AuthorService;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("authors")
 @RequiredArgsConstructor
-public class AuthorController {
+public class AuthorController implements GenericController {
 
     private final AuthorService service;
 
@@ -38,12 +39,7 @@ public class AuthorController {
 
         Integer id = service.persistAuthor(author, user);
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .path("/{id}")
-                .buildAndExpand(id).toUri();
-
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(generateUri(id)).build();
     }
 
 

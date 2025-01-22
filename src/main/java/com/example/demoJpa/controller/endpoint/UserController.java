@@ -1,5 +1,6 @@
 package com.example.demoJpa.controller.endpoint;
 
+import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.domain.UserApplication;
 import com.example.demoJpa.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
-public class UserController {
+public class UserController implements GenericController {
 
     private final UserRepository repository;
 

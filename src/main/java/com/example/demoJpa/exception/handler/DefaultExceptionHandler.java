@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus
     public ResponseEntity<DefaultRequestExceptionDTO> handleFieldConstraintViolation(MethodArgumentNotValidException e) {
 
         List<ErrorDetailDTO> errors = e.getFieldErrors().stream().map(InvalidFieldExceptionDTO::toInvalidFieldExceptionDTO).toList();
@@ -64,4 +66,9 @@ public class DefaultExceptionHandler {
         return wrapException(e.getMessage(), List.of(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(RuntimeException e) {
+
+        return wrapException(e.getMessage(), List.of(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
