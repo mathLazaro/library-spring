@@ -9,8 +9,11 @@ import com.example.demoJpa.repository.BookRepository;
 import com.example.demoJpa.validator.BookValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,25 @@ public class BookService {
         Book book = bookRepository.findById(id).orElse(null);
         bookValidator.verifyNotFound(book);
         return bookMapper.toBookOutputDTO(book);
+    }
+
+    public List<BookOutputDTO> searchBook(BookInputDTO book, Integer size, Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id")
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Book> example = Example.of(bookMapper.toBook(book), matcher);
+
+        Page<Book> all = bookRepository.findAll(example, pageRequest);
+        System.out.println(all);
+        List<BookOutputDTO> formmated = all.stream().map(bookMapper::toBookOutputDTO).toList();
+        System.out.println(formmated);
+
+
+        return formmated;
     }
 
     public Integer persistBook(BookInputDTO bookInput) {

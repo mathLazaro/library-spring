@@ -52,7 +52,7 @@ public class AuthorService {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("last_modified_date", "created_date", "last_modified_by", "id")
+                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id")
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Author> example = Example.of(authorToSearch, matcher);

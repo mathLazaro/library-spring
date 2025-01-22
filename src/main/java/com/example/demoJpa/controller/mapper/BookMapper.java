@@ -17,11 +17,11 @@ public abstract class BookMapper {
     protected AuthorMapper authorMapper;
 
     @Mapping(target = "author",
-            expression = "java(authorRepository.findById(bookInput.authorId()).orElse(null))")
-    public abstract Book toBook(BookInputDTO bookInput);
+            expression = "java(bookInput.authorId() != null ? authorRepository.findById(bookInput.authorId()).orElse(null) : null)")
+    public abstract Book  toBook(BookInputDTO bookInput);
 
     @Mapping(target = "author",
-            expression = "java(authorMapper.toAuthorDTO(book.getAuthor()))")
+            expression = "java(book.getAuthor() != null? authorMapper.toAuthorDTO(book.getAuthor()) : null)")
     public abstract BookOutputDTO toBookOutputDTO(Book book);
 }
 
