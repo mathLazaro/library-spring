@@ -35,11 +35,9 @@ public class AuthorService {
 
         Author response = authorRepository.findById(id).orElse(null);
 
-
         authorValidator.verifyNotFound(response);
 
         return authorMapper.toAuthorDTO(response);
-//        return AuthorDTO.toAuthorDTO(response);
     }
 
     /**
