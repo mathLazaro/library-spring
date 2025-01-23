@@ -26,6 +26,10 @@ public class AuthorService {
     private final UserValidator userValidator;
     private final AuthorMapper authorMapper;
 
+//    public AuthorDTO getAuthorByName(String name) {
+//
+//    }
+
     /**
      * @param id id must be passed
      * @return returns Author found on database or null when not found

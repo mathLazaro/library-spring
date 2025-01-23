@@ -3,10 +3,11 @@ package com.example.demoJpa.controller.endpoint;
 import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.controller.dto.book.BookInputDTO;
 import com.example.demoJpa.controller.dto.book.BookOutputDTO;
+import com.example.demoJpa.service.AuthorService;
 import com.example.demoJpa.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 public class BookController implements GenericController {
 
     private final BookService bookService;
+    private final AuthorService authorService;
 
     @GetMapping("{bookId}")
     public ResponseEntity<BookOutputDTO> getBookById(@PathVariable("bookId") Integer bookId) {
@@ -36,15 +38,15 @@ public class BookController implements GenericController {
     public ResponseEntity<Object> searchBook(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String isbn,
-            @RequestParam(required = false) Integer authorId,
+            @RequestParam(required = false) String authorName,
             @RequestParam(required = false) String genre,
             @RequestParam(required = false) BigDecimal price,
-            @RequestParam(required = false) LocalDate publishDate,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false, defaultValue = "5") Integer size,
             @RequestParam(required = false, defaultValue = "0") Integer page
     ) {
-        BookInputDTO search = new BookInputDTO(isbn, title, publishDate, genre, price, authorId);
-        return new ResponseEntity<>(bookService.searchBook(search, size, page), HttpStatus.OK);
+        Page<BookOutputDTO> bookOutputDTOPage = bookService.searchBook(title, isbn, authorName, genre, price, year, size, page);
+        return new ResponseEntity<>(bookOutputDTOPage, HttpStatus.OK);
     }
 
     @PostMapping

@@ -3,6 +3,7 @@ package com.example.demoJpa.service;
 import com.example.demoJpa.controller.dto.book.BookInputDTO;
 import com.example.demoJpa.controller.dto.book.BookOutputDTO;
 import com.example.demoJpa.controller.mapper.BookMapper;
+import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.domain.Book;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.repository.BookRepository;
@@ -12,8 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,18 +38,44 @@ public class BookService {
         return bookMapper.toBookOutputDTO(book);
     }
 
-    public Page<BookOutputDTO> searchBook(BookInputDTO book, Integer size, Integer page) {
-        // TODO - buscar por ano e nome do autor
+    public Page<BookOutputDTO> searchBook(String title,
+                                          String isbn,
+                                          String authorName,
+                                          String genre,
+                                          BigDecimal price,
+                                          Integer year,
+                                          Integer size,
+                                          Integer page) {
+        // TODO - optimizar busca com Specifications Criteria
         PageRequest pageRequest = PageRequest.of(page, size);
-        ExampleMatcher matcher = ExampleMatcher
+
+        ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id")
+                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id", "author.id")
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Example<Book> example = Example.of(bookMapper.toBook(book), matcher);
 
-        return bookRepository.findAll(example, pageRequest).map(bookMapper::toBookOutputDTO);
+        Author author = Author.builder()
+                .name(authorName)
+                .build();
+
+        Book book = Book.builder()
+                .isbn(isbn)
+                .author(author)
+                .title(title)
+                .price(price)
+                .genre(genre)
+                .build();
+
+        Example<Book> example = Example.of(book, exampleMatcher);
+
+        Page<BookOutputDTO> response = bookRepository.findAll(example, pageRequest).map(bookMapper::toBookOutputDTO);
+        if (year != null) {
+            List<BookOutputDTO> content = response.getContent().stream().filter(b -> b.publishDate().getYear() == year).toList();
+            return new PageImpl<>(content);
+        }
+        return response;
     }
 
     public Integer persistBook(BookInputDTO bookInput) {
@@ -60,7 +92,7 @@ public class BookService {
 
     @Transactional
     public void updateBook(BookInputDTO bookInput, Integer bookId) {
-        // TODO - optimizar
+
 
         Book bookOnDB = bookRepository.findById(bookId).orElse(null);
         bookValidator.verifyNotFound(bookOnDB);

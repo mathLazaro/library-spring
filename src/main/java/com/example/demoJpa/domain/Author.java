@@ -45,7 +45,7 @@ public class Author {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.PERSIST)
     @JsonManagedReference(value = "book-author")
-    private List<Book> bookList;
+     private List<Book> bookList;
 
     public Author(Integer id) {
 

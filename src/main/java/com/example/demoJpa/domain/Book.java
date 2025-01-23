@@ -2,8 +2,7 @@ package com.example.demoJpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,6 +17,9 @@ import java.time.LocalDateTime;
 @ToString
 @Table(uniqueConstraints = @UniqueConstraint(name = "isbn_unique", columnNames = {"isbn"}))
 @EntityListeners(AuditingEntityListener.class)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @Id

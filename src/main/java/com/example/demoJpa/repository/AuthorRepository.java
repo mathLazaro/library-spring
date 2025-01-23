@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
-    public boolean existsAuthorByNameAndBirthDateAndNationality(String name, LocalDate birthDate, String nationality);
+    boolean existsAuthorByNameAndBirthDateAndNationality(String name, LocalDate birthDate, String nationality);
+    Author findFirstByName(String name);
 }
