@@ -68,17 +68,15 @@ public class AuthorService {
 
     /**
      * @param authorDTO authorDTO must be passed
-     * @param userId    user responsible for persist operation
      * @return returns URI of the persisted entity
      * @throws ResponseStatusException throws ResponseStatusException(Unprocessable Entity) if one of the fields from authorDTO is empty ||
      *                                 throws ResponseStatusException(Conflict) when already exists any author with the same name, birthdate and nationality
      *                                 throws ResponseStatusException(Unauthorized) when user is not admin
      *                                 throws ResponseStatusException(Not Found) when user was not found on database
      */
-    public Integer persistAuthor(AuthorDTO authorDTO, Integer userId) {
+    public Integer persistAuthor(AuthorDTO authorDTO) {
 
         Author author = authorMapper.toAuthor(authorDTO);
-        userValidator.verifyAdmin(userId);
         authorValidator.verifyDuplicatedAuthor(author);
 
         return authorRepository.save(author).getId();
@@ -93,14 +91,12 @@ public class AuthorService {
      */
     @Transactional
 
-    public void updateAuthor(AuthorDTO authorDTO, Integer authorId, Integer userId) {
-
-        userValidator.verifyAdmin(userId);
+    public void updateAuthor(AuthorDTO authorDTO, Integer authorId) {
 
         Author authorToUpdate = authorRepository.findById(authorId).orElse(null);
         authorValidator.verifyNotFound(authorToUpdate);
         authorValidator.verifyDuplicatedAuthor(authorToUpdate);
-        
+
 
         // updating Author object
         authorToUpdate.setName(authorDTO.name());
@@ -114,10 +110,7 @@ public class AuthorService {
      *                                 throws ResponseStatusException(Not Found) when the author was not found on database
      */
     @Transactional
-    public void deleteAuthorById(@NonNull Integer id, Integer userId) {
-
-        userValidator.verifyAdmin(userId);
-
+    public void deleteAuthorById(@NonNull Integer id) {
         Author response = authorRepository.findById(id).orElse(null);
 
         authorValidator.verifyNotFound(response);

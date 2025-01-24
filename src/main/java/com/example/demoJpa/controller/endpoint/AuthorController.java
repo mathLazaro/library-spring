@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,33 +30,30 @@ public class AuthorController implements GenericController {
         return new ResponseEntity<>(service.searchAuthorsByNameOrNationality(name, nationality), HttpStatus.OK);
     }
 
-    @PostMapping("{userId}")
+    @PostMapping
     public ResponseEntity<Void> postAuthor(
-            @Valid @RequestBody AuthorDTO author,
-            @PathVariable("userId") Integer user) {
+            @Valid @RequestBody AuthorDTO author) {
 
-        Integer id = service.persistAuthor(author, user);
+        Integer id = service.persistAuthor(author);
 
         return ResponseEntity.created(generateUri(id)).build();
     }
 
 
-    @PutMapping("{authorId}/user/{userId}")
+    @PutMapping("{authorId}")
     public ResponseEntity<Void> putAuthor(
             @Valid @RequestBody AuthorDTO author,
-            @PathVariable("authorId") Integer authorId,
-            @PathVariable("userId") Integer userId) {
+            @PathVariable("authorId") Integer authorId) {
 
-        service.updateAuthor(author, authorId, userId);
+        service.updateAuthor(author, authorId);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{authorId}/user/{userId}")
+    @DeleteMapping("{authorId}")
     public ResponseEntity<Void> deleteAuthor(
-            @PathVariable("authorId") Integer authorId,
-            @PathVariable("userId") Integer userId) {
+            @PathVariable("authorId") Integer authorId) {
 
-        service.deleteAuthorById(authorId, userId);
+        service.deleteAuthorById(authorId);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }
