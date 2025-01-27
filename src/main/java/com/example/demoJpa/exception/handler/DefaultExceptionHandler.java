@@ -5,10 +5,13 @@ import com.example.demoJpa.controller.dto.exception.ErrorDetailDTO;
 import com.example.demoJpa.controller.dto.exception.InvalidFieldExceptionDTO;
 import com.example.demoJpa.exception.InvalidCheckException;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,8 +50,8 @@ public class DefaultExceptionHandler {
         return wrapException(e.getMessage(), List.of(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<DefaultRequestExceptionDTO> handleEntityNotFound(EntityNotFoundException e) {
+    @ExceptionHandler({EntityNotFoundException.class,UsernameNotFoundException.class})
+    public ResponseEntity<DefaultRequestExceptionDTO> handleEntityNotFound(Exception e) {
 
         return wrapException(e.getMessage(), List.of(), HttpStatus.NOT_FOUND);
 
@@ -66,9 +69,19 @@ public class DefaultExceptionHandler {
         return wrapException(e.getMessage(), List.of(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(RuntimeException e) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(Exception e) {
 
         return wrapException(e.getMessage(), List.of(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<DefaultRequestExceptionDTO> handleAuthentitcationException(AuthenticationException e) {
+        return wrapException("Senha ou usuário inválidos", List.of(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<DefaultRequestExceptionDTO> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return wrapException("Acesso negado", List.of(), HttpStatus.FORBIDDEN);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,6 +29,7 @@ public class BookController implements GenericController {
     private final AuthorService authorService;
 
     @GetMapping("{bookId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<BookOutputDTO> getBookById(@PathVariable("bookId") Integer bookId) {
 
         BookOutputDTO book = bookService.getBookById(bookId);
@@ -35,6 +37,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<Object> searchBook(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String isbn,
@@ -50,6 +53,7 @@ public class BookController implements GenericController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<Void> postBook(@RequestBody @Valid BookInputDTO book) {
 
         Integer id = bookService.persistBook(book);
@@ -58,6 +62,7 @@ public class BookController implements GenericController {
     }
 
     @PutMapping("{bookId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<Void> putBook(
             @PathVariable("bookId") Integer bookId,
             @RequestBody @Valid BookInputDTO book) {
@@ -67,6 +72,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("{bookId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<Void> deleteBook(@PathVariable("bookId") Integer bookId) {
 
         bookService.deleteBook(bookId);

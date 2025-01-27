@@ -1,8 +1,11 @@
 package com.example.demoJpa.controller.endpoint;
 
 import com.example.demoJpa.controller.GenericController;
-import com.example.demoJpa.domain.UserApplication;
-import com.example.demoJpa.repository.UserRepository;
+import com.example.demoJpa.controller.dto.users.UserDTO;
+import com.example.demoJpa.domain.Users;
+import com.example.demoJpa.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,30 +14,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
+@RequiredArgsConstructor
 public class UserController implements GenericController {
 
-    private final UserRepository repository;
-
-    public UserController(UserRepository repository) {
-
-        this.repository = repository;
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<UserApplication> getUser(@PathVariable("id") Integer id) {
-
-        Optional<UserApplication> response = repository.findById(id);
-        return response.isPresent() ?
-                new ResponseEntity<>(response.get(), HttpStatus.OK) :
-                new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    }
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> postUser(@RequestBody UserApplication user) {
+    public ResponseEntity<Void> postUser(@RequestBody @Valid UserDTO userDTO) {
+        Integer id = userService.saveUser(userDTO);
 
-        UserApplication response = repository.save(user);
-        return response.getId() == null ?
-                new ResponseEntity<>("Não foi possível persistir o usuário", HttpStatus.EXPECTATION_FAILED) :
-                new ResponseEntity<>("Usuário salvo", HttpStatus.OK);
+        return ResponseEntity.created(generateUri(id)).build();
     }
 }

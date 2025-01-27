@@ -3,6 +3,7 @@ package com.example.demoJpa.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -42,8 +43,14 @@ public class Book {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
+    @CreatedBy
+    @ManyToOne
+    @JoinColumn
+    private Users createdBy;
     @LastModifiedBy
-    private Integer lastModifiedBy;
+    @ManyToOne
+    @JoinColumn
+    private Users lastModifiedBy;
     @LastModifiedDate
     private LocalDateTime lastModifiedDate = LocalDateTime.now();
 }

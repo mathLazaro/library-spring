@@ -90,13 +90,13 @@ public class AuthorService {
      *                                 throws ResponseStatusException(Not Found) when the author was not found on database
      */
     @Transactional
-
     public void updateAuthor(AuthorDTO authorDTO, Integer authorId) {
 
         Author authorToUpdate = authorRepository.findById(authorId).orElse(null);
         authorValidator.verifyNotFound(authorToUpdate);
-        authorValidator.verifyDuplicatedAuthor(authorToUpdate);
+        authorValidator.verifyDuplicatedAuthor(authorMapper.toAuthor(authorDTO));
 
+        // TODO - erro ao setar o usuario na auditoria
 
         // updating Author object
         authorToUpdate.setName(authorDTO.name());
