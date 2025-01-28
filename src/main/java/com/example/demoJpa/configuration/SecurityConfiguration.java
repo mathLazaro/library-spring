@@ -1,5 +1,6 @@
 package com.example.demoJpa.configuration;
 
+import com.example.demoJpa.domain.Users;
 import com.example.demoJpa.repository.UsersRepository;
 import com.example.demoJpa.security.CustomUserDetailService;
 import com.example.demoJpa.security.SpringSecurityAuditorAware;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -50,7 +52,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SpringSecurityAuditorAware springSecurityAuditorAware(UsersRepository usersRepository) {
+    public AuditorAware<Users> springSecurityAuditorAware(UsersRepository usersRepository) {
         return new SpringSecurityAuditorAware(usersRepository);
     }
 }

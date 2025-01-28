@@ -96,8 +96,6 @@ public class AuthorService {
         authorValidator.verifyNotFound(authorToUpdate);
         authorValidator.verifyDuplicatedAuthor(authorMapper.toAuthor(authorDTO));
 
-        // TODO - erro ao setar o usuario na auditoria
-
         // updating Author object
         authorToUpdate.setName(authorDTO.name());
         authorToUpdate.setBirthDate(authorDTO.birthDate());
