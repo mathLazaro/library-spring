@@ -17,11 +17,10 @@ import java.time.LocalDateTime;
 @Entity
 @ToString
 @Table(uniqueConstraints = @UniqueConstraint(name = "isbn_unique", columnNames = {"isbn"}))
-@EntityListeners(AuditingEntityListener.class)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class Book extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,19 +37,4 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
-
-    // Auditing
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdDate = LocalDateTime.now();
-    @CreatedBy
-    @ManyToOne
-    @JoinColumn
-    private Users createdBy;
-    @LastModifiedBy
-    @ManyToOne
-    @JoinColumn
-    private Users lastModifiedBy;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate = LocalDateTime.now();
 }

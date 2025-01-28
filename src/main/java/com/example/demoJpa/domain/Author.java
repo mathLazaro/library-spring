@@ -21,8 +21,7 @@ import java.util.List;
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uniqueAuthor", columnNames = {"name", "birthDate", "nationality"})})
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Author {
+public class Author extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,21 +32,6 @@ public class Author {
     private LocalDate birthDate;
     @Column(nullable = false)
     private String nationality;
-
-    // auditing fields
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdDate = LocalDateTime.now();
-    @CreatedBy
-    @ManyToOne
-    @JoinColumn
-    private Users createdBy;
-    @LastModifiedBy
-    @ManyToOne
-    @JoinColumn
-    private Users lastModifiedBy;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.PERSIST)
