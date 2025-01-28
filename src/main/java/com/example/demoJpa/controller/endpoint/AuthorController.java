@@ -1,8 +1,6 @@
 package com.example.demoJpa.controller.endpoint;
 
-import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.controller.dto.author.AuthorDTO;
-import com.example.demoJpa.domain.RoleUser;
 import com.example.demoJpa.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

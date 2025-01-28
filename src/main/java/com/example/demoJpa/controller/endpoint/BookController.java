@@ -1,6 +1,5 @@
 package com.example.demoJpa.controller.endpoint;
 
-import com.example.demoJpa.controller.GenericController;
 import com.example.demoJpa.controller.dto.book.BookInputDTO;
 import com.example.demoJpa.controller.dto.book.BookOutputDTO;
 import com.example.demoJpa.service.AuthorService;
@@ -8,17 +7,12 @@ import com.example.demoJpa.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
-import java.net.URI;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("books")

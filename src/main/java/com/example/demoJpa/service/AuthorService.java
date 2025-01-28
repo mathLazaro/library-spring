@@ -5,7 +5,6 @@ import com.example.demoJpa.controller.mapper.AuthorMapper;
 import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.validator.AuthorValidator;
-import com.example.demoJpa.validator.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -23,12 +22,8 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
-    private final UserValidator userValidator;
     private final AuthorMapper authorMapper;
 
-//    public AuthorDTO getAuthorByName(String name) {
-//
-//    }
 
     /**
      * @param id id must be passed

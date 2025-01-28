@@ -1,4 +1,4 @@
-package com.example.demoJpa.security;
+package com.example.demoJpa.auditing;
 
 import com.example.demoJpa.domain.Users;
 import com.example.demoJpa.repository.UsersRepository;

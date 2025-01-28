@@ -1,4 +1,4 @@
-package com.example.demoJpa.controller;
+package com.example.demoJpa.controller.endpoint;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
