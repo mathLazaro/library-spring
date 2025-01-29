@@ -3,19 +3,16 @@ package com.example.demoJpa.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Builder
-@Table(uniqueConstraints = @UniqueConstraint(name = "unique_username", columnNames = {"username"}))
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "unique_username", columnNames = {"username"}),
+        @UniqueConstraint(name = "unique_email", columnNames = {"email"})})
 public class Users {
 
     @Id
@@ -26,6 +23,7 @@ public class Users {
     @Column(length = 500, nullable = false)
     private String password;
     private String name;
+    private String email;
     @Column
     @Enumerated(EnumType.STRING)
     private RoleUser roleUser = RoleUser.OPERATOR;

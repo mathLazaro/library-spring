@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
@@ -72,6 +73,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(Exception e) {
 
+        System.out.println(Arrays.toString(e.getStackTrace()));
         return wrapException(e.getMessage(), List.of(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -11,4 +11,5 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     Optional<Users> findUsersByUsername(String username);
+    Optional<Users> findUsersByEmail(String email);
 }

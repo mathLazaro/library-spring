@@ -23,20 +23,31 @@ public class UserService {
     private final UserMapper userMapper;
 
     public Optional<Users> getByLogin(String username) {
-        System.out.println(username);
+
         return usersRepository.findUsersByUsername(username);
     }
 
-    public Integer saveUser(UserDTO userDTO) {
-        Users user = userMapper.toUser(userDTO);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public Optional<Users> getByEmail(String email) {
 
-        return usersRepository.save(user).getId();
+        return usersRepository.findUsersByEmail(email);
+    }
+
+    public Users persist(Users user) {
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return usersRepository.save(user);
+    }
+
+    public Integer saveUser(UserDTO userDTO) {
+
+        Users user = userMapper.toUser(userDTO);
+        return persist(user).getId();
     }
 
     @Transactional
     public void changeUserProperties(UserDTO userDTO) {
-        User userAuth = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User userAuth = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Users user = getByLogin(userAuth.getUsername()).get();
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setName(userDTO.getName());
@@ -44,6 +55,7 @@ public class UserService {
     }
 
     public void deleteUser(Integer id) {
+
         if (!usersRepository.existsById(id))
             throw new EntityNotFoundException("Id não encontrado no banco de dados");
         usersRepository.deleteById(id);

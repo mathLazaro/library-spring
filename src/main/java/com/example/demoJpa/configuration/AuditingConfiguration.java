@@ -11,7 +11,7 @@ import org.springframework.data.domain.AuditorAware;
 public class AuditingConfiguration {
 
     @Bean
-    public AuditorAware<Users> springSecurityAuditorAware(UsersRepository usersRepository) {
-        return new SpringSecurityAuditorAware(usersRepository);
+    public AuditorAware<Users> springSecurityAuditorAware() {
+        return new SpringSecurityAuditorAware();
     }
 }

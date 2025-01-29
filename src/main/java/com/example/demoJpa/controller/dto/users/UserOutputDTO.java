@@ -9,5 +9,6 @@ import lombok.Data;
 public class UserOutputDTO {
     private String name;
     private String username;
+    private String email;
     private RoleUser roleUser;
 }
