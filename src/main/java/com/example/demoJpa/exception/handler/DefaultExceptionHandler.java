@@ -70,12 +70,12 @@ public class DefaultExceptionHandler {
         return wrapException(e.getMessage(), List.of(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(Exception e) {
-
-        System.out.println(Arrays.toString(e.getStackTrace()));
-        return wrapException(e.getMessage(), List.of(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<DefaultRequestExceptionDTO> handleGenericExceptions(Exception e) {
+//
+//        Arrays.stream(e.getStackTrace()).forEach(System.out::println);
+//        return wrapException(e.getMessage(), List.of(), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<DefaultRequestExceptionDTO> handleAuthentitcationException(AuthenticationException e) {

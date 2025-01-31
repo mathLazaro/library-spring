@@ -48,4 +48,12 @@ public class ClientService {
             throw new EntityNotFoundException("Client não encontrado");
         return client.get();
     }
+
+    public Client getClientById(Integer id) {
+
+        Optional<Client> client = clientRepository.findById(id);
+        if (client.isEmpty())
+            throw new EntityNotFoundException("Client não encontrado");
+        return client.get();
+    }
 }
