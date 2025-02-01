@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class BookService {
+public class BookService extends GenericService {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
@@ -52,7 +52,7 @@ public class BookService {
         ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id", "author.id")
+                .withIgnorePaths(ignoreFields(List.of("author"),"id"))
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 

@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 public class BookController implements GenericController {
 
     private final BookService bookService;
-    private final AuthorService authorService;
 
     @GetMapping("{bookId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")

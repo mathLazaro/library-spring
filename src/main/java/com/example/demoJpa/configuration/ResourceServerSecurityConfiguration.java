@@ -21,8 +21,8 @@ public class ResourceServerSecurityConfiguration {
 
     @Bean
 //    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler successHandler) throws Exception {
-        return httpSecurity
+    public SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(Customizer.withDefaults())
                 .oauth2Login(oAuth2Configurer -> oAuth2Configurer.successHandler(successHandler))

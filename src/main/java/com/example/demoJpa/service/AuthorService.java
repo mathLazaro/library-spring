@@ -2,6 +2,7 @@ package com.example.demoJpa.service;
 
 import com.example.demoJpa.controller.dto.author.AuthorDTO;
 import com.example.demoJpa.controller.mapper.AuthorMapper;
+import com.example.demoJpa.domain.Auditable;
 import com.example.demoJpa.domain.Author;
 import com.example.demoJpa.repository.AuthorRepository;
 import com.example.demoJpa.validator.AuthorValidator;
@@ -13,12 +14,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorService {
+public class AuthorService extends GenericService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
@@ -51,7 +54,7 @@ public class AuthorService {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreNullValues()
-                .withIgnorePaths("lastModifiedBy", "createdDate", "lastModifiedDate", "id")
+                .withIgnorePaths(ignoreFields(List.of(), "id"))
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example<Author> example = Example.of(authorToSearch, matcher);

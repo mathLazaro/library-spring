@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ClientService {
+public class ClientService extends GenericService {
 
     private final ClientRepository clientRepository;
     private final PasswordEncoder encoder;

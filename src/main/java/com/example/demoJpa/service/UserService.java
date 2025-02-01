@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService extends GenericService {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
