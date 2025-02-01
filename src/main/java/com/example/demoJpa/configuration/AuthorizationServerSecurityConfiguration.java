@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -35,16 +37,15 @@ import java.util.UUID;
 public class AuthorizationServerSecurityConfiguration {
 
     @Bean
-    @Order(1)
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
-        httpSecurity.with(authorizationServerConfigurer, Customizer.withDefaults());
-        httpSecurity.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
-        httpSecurity
-                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-                .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
-                .formLogin(config -> config.loginPage("/login"));
-        return httpSecurity.build();
+
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(httpSecurity);
+        httpSecurity.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .oidc(Customizer.withDefaults());
+        return httpSecurity.oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
+                .formLogin(Customizer.withDefaults())
+                .build();
     }
 
     @Bean
@@ -62,19 +63,6 @@ public class AuthorizationServerSecurityConfiguration {
     }
 
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings(){
-        return AuthorizationServerSettings.builder()
-                .tokenEndpoint("/oauth2/token")
-                .tokenIntrospectionEndpoint("/oauth2/introspect")
-                .tokenRevocationEndpoint("/oauth2/revoke")
-                .authorizationEndpoint("/oauth2/authorize")
-                .oidcUserInfoEndpoint("/oauth2/userinfo")
-                .jwkSetEndpoint("/oauth2/jwks")
-                .oidcLogoutEndpoint("/oauth2/logout")
-                .build();
-    }
-
-    @Bean
     public TokenSettings tokenSettings() {
 
         return TokenSettings.builder()
@@ -85,6 +73,7 @@ public class AuthorizationServerSecurityConfiguration {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws Exception {
+
         RSAKey rsaKey = generateRSAKey();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
@@ -92,10 +81,12 @@ public class AuthorizationServerSecurityConfiguration {
 
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
     private RSAKey generateRSAKey() throws NoSuchAlgorithmException {
+
         KeyPairGenerator rsa = KeyPairGenerator.getInstance("RSA");
         rsa.initialize(2048);
         KeyPair keyPair = rsa.generateKeyPair();

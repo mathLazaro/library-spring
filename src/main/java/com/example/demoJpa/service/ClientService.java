@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,6 @@ public class ClientService {
         if (clientRepository.existsByClientId(client.getClientId()))
             throw new InvalidCheckException("Client id já cadastrado");
         Client clientToSave = Client.builder()
-                .clientName(client.getClientName())
                 .clientId(client.getClientId())
                 .clientSecret(encoder.encode(client.getClientSecret()))
                 .redirectUri(client.getRedirectUris().stream().findFirst().orElse(null))
@@ -49,7 +49,7 @@ public class ClientService {
         return client.get();
     }
 
-    public Client getClientById(Integer id) {
+    public Client getClientById(UUID id) {
 
         Optional<Client> client = clientRepository.findById(id);
         if (client.isEmpty())

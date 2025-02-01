@@ -21,9 +21,7 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
     private final TokenSettings tokenSettings;
 
     @Override
-    public void save(RegisteredClient registeredClient) {
-//        clientService.persistClient(registeredClient);
-    }
+    public void save(RegisteredClient registeredClient) {}
 
     @Override
     public RegisteredClient findById(String id) {
@@ -35,10 +33,10 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
     public RegisteredClient findByClientId(String clientId) {
 
         Client client = clientService.getClientByClientId(clientId);
+        System.out.println(client);
 
         return RegisteredClient.withId(client.getId().toString())
                 .clientId(client.getClientId())
-                .clientName(client.getClientName())
                 .clientSecret(client.getClientSecret())
                 .scope(client.getScope())
                 .redirectUri(client.getRedirectUri())
