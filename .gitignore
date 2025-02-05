@@ -32,4 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
+app.log
 docker-compose.yaml

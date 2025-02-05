@@ -1,6 +1,9 @@
 spring:
   application:
-    name: Demo Jpa
+    name: library
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     url: ${DB_URL}
     username: postgres
@@ -19,9 +22,11 @@ spring:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
 logging:
+  file:
+    name: app.log
+  com:
+    example: trace
   level:
     org:
       springframework:
-        security: trace
-#        security:
-#          oauth2: debug
+        security: info
