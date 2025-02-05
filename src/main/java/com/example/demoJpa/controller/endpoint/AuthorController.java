@@ -2,6 +2,8 @@ package com.example.demoJpa.controller.endpoint;
 
 import com.example.demoJpa.controller.dto.author.AuthorDTO;
 import com.example.demoJpa.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("authors")
 @RequiredArgsConstructor
-
+@Tag(name="Author")
 public class AuthorController implements GenericController {
 
     private final AuthorService service;

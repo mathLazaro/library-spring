@@ -8,16 +8,15 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import jdk.dynalink.linker.LinkerServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,13 +38,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
-import java.util.List;
 import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
 public class AuthorizationServerSecurityConfiguration {
-    private final String[] WHITE_LIST = new String[]{"/v2/api-docs/**","/v3/api-docs/**","/swagger-resources/**","/swagger-ui.html","/swagger-ui/**","/webjars/**","/swagger-ui/index.html"};
+    private final String[] WHITE_LIST = new String[]{"/v2/api-docs/**", "/v2/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**", "/swagger-ui/index.html"};
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -55,7 +53,6 @@ public class AuthorizationServerSecurityConfiguration {
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());
         return http.oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
-//                .formLogin(Customizer.withDefaults())
                 .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
@@ -120,10 +117,10 @@ public class AuthorizationServerSecurityConfiguration {
             if (principal instanceof CustomAuthentication authentication) {
                 OAuth2TokenType type = context.getTokenType();
                 Users user = authentication.getPrincipal();
-                if(OAuth2TokenType.ACCESS_TOKEN.equals(type)) {
+                if (OAuth2TokenType.ACCESS_TOKEN.equals(type)) {
                     context.getClaims()
                             .claim("email", user.getEmail())
-                            .claim("authorities",authentication.getAuthorities());
+                            .claim("authorities", authentication.getAuthorities());
                 }
             }
         };
