@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: mathlazaro/library-api
     container_name: api
     env_file: [.env]
     depends_on: [db]
