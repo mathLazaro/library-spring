@@ -33,6 +33,5 @@ build/
 .vscode/
 
 *log*
-docker-compose.yaml
 
 .env
